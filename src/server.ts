@@ -3,6 +3,9 @@ import * as http from "http";
 import dotenv from "dotenv";
 
 import app from "./app";
+import bot from "./bot";
+
+bot.launch();
 
 dotenv.config();
 

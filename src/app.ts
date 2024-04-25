@@ -4,15 +4,11 @@ import morgan from "morgan";
 
 const app = express();
 
-app.use(cors());
+// app.use(cors());
 
-// Logging middleware
-app.use(morgan("combined"));
+// // Logging middleware
+// app.use(morgan("combined"));
 
-app.use(express.json());
-
-app.get("/", (req, res) => {
-  res.send("Server up and running");
-});
+// app.use(express.json());
 
 export default app;
