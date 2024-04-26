@@ -1,5 +1,7 @@
 import "dotenv/config";
 
+const fetch = require('node-fetch')
+
 import { Weather } from "../models/weather.model";
 
 const OW_API_KEY = String(process.env.OW_API_KEY);
