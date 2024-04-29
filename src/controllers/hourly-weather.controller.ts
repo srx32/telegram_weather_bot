@@ -14,7 +14,7 @@ hourlyWeatherController.action("hourly", async (ctx) => {
   });
 });
 
-hourlyWeatherController.action(/hourly-(.+)/, async (ctx) => {
+hourlyWeatherController.action(/hourly-(\d+)/, async (ctx) => {
   const nbHours = Number(ctx.match[1]);
 
   console.log("Number of hours : " + nbHours);

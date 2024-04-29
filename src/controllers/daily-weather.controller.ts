@@ -14,7 +14,7 @@ dailyWeatherController.action("daily", async (ctx) => {
   });
 });
 
-dailyWeatherController.action(/daily-(.+)/, async (ctx) => {
+dailyWeatherController.action(/daily-(\d+)/, async (ctx) => {
   const nbDays = Number(ctx.match[1]);
 
   console.log("Number of days : " + nbDays);
