@@ -1,6 +1,6 @@
 import "dotenv/config";
 
-const fetch = require('node-fetch')
+const fetch = require("node-fetch");
 
 import { Weather } from "../models/weather.model";
 
@@ -23,7 +23,7 @@ async function getCurrentWeather(lat: number, lon: number) {
 
     const json = await result.json();
 
-    console.log(json);
+    // console.log(json);
 
     return json as Weather;
   } catch (error) {
@@ -36,6 +36,7 @@ async function getCurrentWeather(lat: number, lon: number) {
   //     .catch((error) => console.log(error));
 }
 
+// API - max of 48 hours
 async function getHourlyWeather(lat: number, lon: number) {
   const q =
     `lat=${lat}&lon=${lon}` +
@@ -49,7 +50,7 @@ async function getHourlyWeather(lat: number, lon: number) {
 
     const json = await result.json();
 
-    console.log(json);
+    // console.log(json);
 
     return json as Weather;
   } catch (error) {
@@ -57,6 +58,7 @@ async function getHourlyWeather(lat: number, lon: number) {
   }
 }
 
+// API - max of 8 days
 async function getDailyWeather(lat: number, lon: number) {
   const q =
     `lat=${lat}&lon=${lon}` +
@@ -70,7 +72,7 @@ async function getDailyWeather(lat: number, lon: number) {
 
     const json = await result.json();
 
-    console.log(json);
+    // console.log(json);
 
     return json as Weather;
   } catch (error) {
@@ -78,11 +80,52 @@ async function getDailyWeather(lat: number, lon: number) {
   }
 }
 
-function getMatchingCities(cityName: string) {}
+async function getMatchingCities(cityName: string) {}
+
+function getMatchingEmoji(icon_code: string) {
+  if (icon_code === "01d" || icon_code === "01n") {
+    return "☀️";
+  }
+
+  if (icon_code === "02d" || icon_code === "02n") {
+    return "🌤️";
+  }
+
+  if (icon_code === "03d" || icon_code === "03n") {
+    return "☁️";
+  }
+
+  if (icon_code === "04d" || icon_code === "04n") {
+    return "🌥️";
+  }
+
+  if (icon_code === "09d" || icon_code === "09n") {
+    return "🌧️";
+  }
+
+  if (icon_code === "10d" || icon_code === "10n") {
+    return "🌦️";
+  }
+
+  if (icon_code === "11d" || icon_code === "11n") {
+    return "🌩️";
+  }
+
+  if (icon_code === "13d" || icon_code === "13n") {
+    return "❄️";
+  }
+
+  if (icon_code === "50d" || icon_code === "50n") {
+    return "🌫️";
+  }
+
+  return "";
+}
 
 export {
   getCurrentWeather,
   getHourlyWeather,
   getDailyWeather,
   getMatchingCities,
+  getMatchingEmoji,
 };
