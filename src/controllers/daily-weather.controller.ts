@@ -2,16 +2,16 @@ import { Composer, Markup } from "telegraf";
 import { USER_SETTINGS } from "../models/user-settings.model";
 import { getDailyWeather, getMatchingEmoji } from "./weather.controller";
 import { DateTime } from "luxon";
-import { DAILY_MENU } from "../models/weather-menu.model";
+import { DAILY_MENU, WEATHER_MENU } from "../models/weather-menu.model";
 
 const dailyWeatherController = new Composer();
 
 dailyWeatherController.action("daily", async (ctx) => {
   await ctx.answerCbQuery();
 
-  await ctx.editMessageReplyMarkup({
-    inline_keyboard: DAILY_MENU,
-  });
+  await ctx.editMessageReplyMarkup(
+    Markup.inlineKeyboard(DAILY_MENU).reply_markup
+  );
 });
 
 dailyWeatherController.action(/daily-(\d+)/, async (ctx) => {
@@ -62,9 +62,16 @@ dailyWeatherController.action(/daily-(\d+)/, async (ctx) => {
 
   await ctx.answerCbQuery();
 
+  await ctx.deleteMessage();
+
   await ctx.reply(`Here is your daily weather: \n\n${weatherText}`, {
     parse_mode: "HTML",
   });
+
+  await ctx.reply(
+    "Want another weather forecast, make your selection : ",
+    Markup.inlineKeyboard(WEATHER_MENU)
+  );
 });
 
 export default dailyWeatherController;

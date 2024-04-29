@@ -2,6 +2,7 @@ import { Composer, Markup } from "telegraf";
 import { USER_SETTINGS } from "../models/user-settings.model";
 import { getCurrentWeather, getMatchingEmoji } from "./weather.controller";
 import { DateTime } from "luxon";
+import { WEATHER_MENU } from "../models/weather-menu.model";
 
 const currentWeatherController = new Composer();
 
@@ -42,9 +43,16 @@ currentWeatherController.action("current", async (ctx) => {
 
   await ctx.answerCbQuery();
 
+  await ctx.deleteMessage();
+
   await ctx.reply(`Here is your current weather: \n\n${weatherText}`, {
     parse_mode: "HTML",
   });
+
+  await ctx.reply(
+    "Want another weather forecast, make your selection : ",
+    Markup.inlineKeyboard(WEATHER_MENU)
+  );
 });
 
 export default currentWeatherController;
