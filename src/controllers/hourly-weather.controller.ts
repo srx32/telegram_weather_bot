@@ -1,4 +1,4 @@
-import { Composer } from "telegraf";
+import { Composer, Markup } from "telegraf";
 import { USER_SETTINGS } from "../models/user-settings.model";
 import { getHourlyWeather, getMatchingEmoji } from "./weather.controller";
 import { DateTime } from "luxon";
@@ -24,7 +24,12 @@ hourlyWeatherController.action(/hourly-(\d+)/, async (ctx) => {
   );
 
   if (!userSettings) {
-    ctx.reply(`Please resend your location`);
+    ctx.reply(
+      `Please resend your location`,
+      Markup.keyboard([
+        Markup.button.locationRequest("Tap here to send your location 🌍 📌"),
+      ]).oneTime(true)
+    );
     return;
   }
 

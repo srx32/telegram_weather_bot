@@ -1,4 +1,4 @@
-import { Composer } from "telegraf";
+import { Composer, Markup } from "telegraf";
 import { USER_SETTINGS } from "../models/user-settings.model";
 import { getCurrentWeather, getMatchingEmoji } from "./weather.controller";
 import { DateTime } from "luxon";
@@ -11,7 +11,12 @@ currentWeatherController.action("current", async (ctx) => {
   );
 
   if (!userSettings) {
-    ctx.reply(`Please resend your location`);
+    ctx.reply(
+      `Please resend your location`,
+      Markup.keyboard([
+        Markup.button.locationRequest("Tap here to send your location 🌍 📌"),
+      ]).oneTime(true)
+    );
     return;
   }
 
