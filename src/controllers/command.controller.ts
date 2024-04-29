@@ -1,4 +1,6 @@
 import { Composer, Markup } from "telegraf";
+import { WEATHER_MENU } from "../models/weather-menu.model";
+import { USER_SETTINGS } from "../models/user-settings.model";
 
 const commandController = new Composer();
 
@@ -39,6 +41,27 @@ commandController.command("setup", async (ctx) => {
     Markup.keyboard([
       Markup.button.locationRequest("Tap here to send your location 🌍 📌"),
     ]).oneTime(true)
+  );
+});
+
+commandController.command("weather", async (ctx) => {
+    const userSettings = USER_SETTINGS.find(
+        (userSettings) => userSettings.userId === ctx.message.from.id
+      );
+    
+      if (!userSettings) {
+        ctx.reply(
+          `Please resend your location`,
+          Markup.keyboard([
+            Markup.button.locationRequest("Tap here to send your location 🌍 📌"),
+          ]).oneTime(true)
+        );
+        return;
+      }
+      
+  await ctx.reply(
+    "Select the type of weather forecast, you want : ",
+    Markup.inlineKeyboard(WEATHER_MENU)
   );
 });
 
