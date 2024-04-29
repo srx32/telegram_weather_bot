@@ -1,6 +1,6 @@
 import { Composer, Markup } from "telegraf";
 import { USER_SETTINGS } from "../models/user-settings.model";
-import { getDailyWeather, getMatchingEmoji } from "./weather.controller";
+import { getDailyWeather, getMatchingEmoji } from "../helpers/weather.helper";
 import { DateTime } from "luxon";
 import { DAILY_MENU, WEATHER_MENU } from "../models/weather-menu.model";
 
