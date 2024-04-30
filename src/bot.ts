@@ -9,6 +9,7 @@ import hourlyWeatherController from "./controllers/hourly-weather.controller";
 import dailyWeatherController from "./controllers/daily-weather.controller";
 import { WEATHER_MENU } from "./models/weather-menu.model";
 import commandController from "./controllers/command.controller";
+import locationController from "./controllers/location.controller";
 
 const bot = new Telegraf(process.env.BOT_TOKEN!);
 
@@ -24,31 +25,12 @@ bot.action("weather_menu", async (ctx) => {
   });
 });
 
-bot.on(message("location"), async (ctx) => {
-  const location = ctx.message.location;
-
-  console.log(location);
-
-  USER_SETTINGS.push({
-    chatId: ctx.chat.id,
-    userId: ctx.message.from.id,
-    location: { latitude: location.latitude, longitude: location.longitude },
-  });
-
-  await ctx.reply(`Coordinates received!`, Markup.removeKeyboard());
-
-  await ctx.reply(
-    `Now, select the type of weather forecast you want : `,
-    Markup.inlineKeyboard(WEATHER_MENU)
-  );
-});
-
+// Order is important. Commands controller/middleware should come before messages (text) controller/middleware
 bot.use(commandController);
+bot.use(locationController);
 bot.use(currentWeatherController);
 bot.use(hourlyWeatherController);
 bot.use(dailyWeatherController);
-
-
 
 // bot.hears(/reverse (.+)/, (ctx) =>
 //   ctx.reply(ctx.match[1].split('').reverse().join(''))

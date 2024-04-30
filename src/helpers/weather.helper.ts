@@ -3,6 +3,7 @@ import "dotenv/config";
 const fetch = require("node-fetch");
 
 import { Weather } from "../models/weather.model";
+import { City } from "../models/city.model";
 
 const OW_API_KEY = String(process.env.OW_API_KEY);
 
@@ -80,7 +81,21 @@ async function getDailyWeather(lat: number, lon: number) {
   }
 }
 
-async function getMatchingCities(cityName: string) {}
+async function getMatchingCities(cityName: string) {
+  const q = `q=${cityName}` + `&limit=5` + `&appid=${OW_API_KEY}`;
+
+  try {
+    const result = await fetch(OW_GEO_API + q);
+
+    const json = await result.json();
+
+    // console.log(json);
+
+    return json as City[];
+  } catch (error) {
+    console.log(error);
+  }
+}
 
 function getMatchingEmoji(icon_code: string) {
   if (icon_code === "01d" || icon_code === "01n") {

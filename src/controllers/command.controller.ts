@@ -1,5 +1,5 @@
 import { Composer, Markup } from "telegraf";
-import { WEATHER_MENU } from "../models/weather-menu.model";
+import { LOCATION_MENU, WEATHER_MENU } from "../models/weather-menu.model";
 import { USER_SETTINGS } from "../models/user-settings.model";
 
 const commandController = new Composer();
@@ -36,29 +36,30 @@ commandController.help(async (ctx) => {
 
 commandController.command("setup", async (ctx) => {
   await ctx.reply(
-    "First, your location",
-
-    Markup.keyboard([
-      Markup.button.locationRequest("Tap here to send your location 🌍 📌"),
-    ]).oneTime(true)
+    "First, we need your location.\nYou can send your location or send the city name :",
+    Markup.inlineKeyboard(LOCATION_MENU)
   );
+
+  // Markup.keyboard([
+  //   Markup.button.locationRequest("Tap here to send your location 🌍 📌"),
+  // ]).oneTime(true)
 });
 
 commandController.command("weather", async (ctx) => {
-    const userSettings = USER_SETTINGS.find(
-        (userSettings) => userSettings.userId === ctx.message.from.id
-      );
-    
-      if (!userSettings) {
-        ctx.reply(
-          `Please resend your location`,
-          Markup.keyboard([
-            Markup.button.locationRequest("Tap here to send your location 🌍 📌"),
-          ]).oneTime(true)
-        );
-        return;
-      }
-      
+  const userSettings = USER_SETTINGS.find(
+    (userSettings) => userSettings.userId === ctx.message.from.id
+  );
+
+  if (!userSettings) {
+    ctx.reply(
+      `Please resend your location`,
+      Markup.keyboard([
+        Markup.button.locationRequest("Tap here to send your location 🌍 📌"),
+      ]).oneTime(true)
+    );
+    return;
+  }
+
   await ctx.reply(
     "Select the type of weather forecast, you want : ",
     Markup.inlineKeyboard(WEATHER_MENU)
