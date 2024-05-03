@@ -54,8 +54,12 @@ dailyWeatherController.action(/daily-(\d+)/, async (ctx) => {
 
       weatherText +=
         `<blockquote>${dateTime.toUpperCase()}</blockquote>` +
-        `\n${weatherEmoji} ${hf.temp.day} ~ ${hf.temp.eve} °C` +
+        `\n${weatherEmoji} ${hf.temp.morn} ~ ${hf.temp.night} °C` +
         `\n<b>${hf.weather[0].description.toUpperCase()}</b>` +
+        `\n\n<span class="tg-spoiler">Précipitation : ${hf.pop * 100} %` +
+        `\nHumidité : ${hf.humidity} %` +
+        `\nVent : ${hf.wind_speed} m/s` +
+        `\nTémpérature ressentie : ${hf.feels_like.morn} ~ ${hf.feels_like.night} °C</span>` +
         `\n\n`;
     }
   });
@@ -64,9 +68,12 @@ dailyWeatherController.action(/daily-(\d+)/, async (ctx) => {
 
   await ctx.deleteMessage();
 
-  await ctx.reply(`Here is your daily weather: \n\n${weatherText}`, {
-    parse_mode: "HTML",
-  });
+  await ctx.reply(
+    `Here is your <b>daily</b> weather:`.toUpperCase() + `\n\n${weatherText}`,
+    {
+      parse_mode: "HTML",
+    }
+  );
 
   await ctx.reply(
     "Want another weather forecast, make your selection : ",

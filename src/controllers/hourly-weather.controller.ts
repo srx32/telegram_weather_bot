@@ -40,7 +40,7 @@ hourlyWeatherController.action(/hourly-(\d+)/, async (ctx) => {
 
   const hourlyForecast = weather?.hourly!;
 
-  let weatherText = "";
+  let weatherTextArray: string[] = [];
   hourlyForecast.forEach((hf, index) => {
     if (index < nbHours) {
       const dateTime = DateTime.fromSeconds(hf.dt).toFormat(
@@ -50,21 +50,61 @@ hourlyWeatherController.action(/hourly-(\d+)/, async (ctx) => {
 
       const weatherEmoji = getMatchingEmoji(hf.weather[0].icon);
 
-      weatherText +=
+      weatherTextArray.push(
         `<blockquote>${dateTime.toUpperCase()}</blockquote>` +
-        `\n${weatherEmoji} ${hf.temp} °C` +
-        `\n<b>${hf.weather[0].description.toUpperCase()}</b>` +
-        `\n\n`;
+          `\n${weatherEmoji} ${hf.temp} °C` +
+          `\n<b>${hf.weather[0].description.toUpperCase()}</b>` +
+          `\n\n<span class="tg-spoiler">Précipitation : ${hf.pop * 100} %` +
+          `\nHumidité : ${hf.humidity} %` +
+          `\nVent : ${hf.wind_speed} m/s` +
+          `\nTémpérature ressentie : ${hf.feels_like} °C</span>` +
+          `\n\n`
+      );
     }
   });
+
+  let weatherText = "";
+  let weatherTextPart1 = "";
+  let weatherTextPart2 = "";
+  if (weatherTextArray.length <= 24) {
+    weatherText = weatherTextArray.reduce(
+      (accumulator, currentValue) => accumulator + currentValue,
+      ""
+    );
+  } else {
+    weatherTextPart1 = weatherTextArray
+      .slice(0, 25)
+      .reduce((accumulator, currentValue) => accumulator + currentValue, "");
+    weatherTextPart2 = weatherTextArray
+      .slice(25)
+      .reduce((accumulator, currentValue) => accumulator + currentValue, "");
+  }
 
   await ctx.answerCbQuery();
 
   await ctx.deleteMessage();
 
-  await ctx.reply(`Here is your hourly weather: \n\n${weatherText}`, {
-    parse_mode: "HTML",
-  });
+  if (weatherTextArray.length <= 24) {
+    await ctx.reply(`Here is your <b>hourly</b> weather : \n\n${weatherText}`, {
+      parse_mode: "HTML",
+    });
+  } else {
+    await ctx.reply(
+      `Here is your <b>hourly</b> weather (PART 1):`.toUpperCase() +
+        `\n\n${weatherTextPart1}`,
+      {
+        parse_mode: "HTML",
+      }
+    );
+
+    await ctx.reply(
+      `Here is your <b>hourly</b> weather (PART 2):`.toUpperCase() +
+        `\n\n${weatherTextPart2}`,
+      {
+        parse_mode: "HTML",
+      }
+    );
+  }
 
   await ctx.reply(
     "Want another weather forecast, make your selection : ",

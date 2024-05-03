@@ -45,9 +45,12 @@ currentWeatherController.action("current", async (ctx) => {
 
   await ctx.deleteMessage();
 
-  await ctx.reply(`Here is your current weather: \n\n${weatherText}`, {
-    parse_mode: "HTML",
-  });
+  await ctx.reply(
+    `Here is your <b>current</b> weather:`.toUpperCase() + `\n\n${weatherText}`,
+    {
+      parse_mode: "HTML",
+    }
+  );
 
   await ctx.reply(
     "Want another weather forecast, make your selection : ",
