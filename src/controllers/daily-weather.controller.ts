@@ -56,7 +56,9 @@ dailyWeatherController.action(/daily-(\d+)/, async (ctx) => {
         `<blockquote>${dateTime.toUpperCase()}</blockquote>` +
         `\n${weatherEmoji} ${hf.temp.morn} ~ ${hf.temp.night} °C` +
         `\n<b>${hf.weather[0].description.toUpperCase()}</b>` +
-        `\n\n<span class="tg-spoiler">Précipitation : ${hf.pop * 100} %` +
+        `\n\n<span class="tg-spoiler">Précipitation : ${Number(
+          hf.pop * 100
+        ).toFixed(0)} %` +
         `\nHumidité : ${hf.humidity} %` +
         `\nVent : ${hf.wind_speed} m/s` +
         `\nTémpérature ressentie : ${hf.feels_like.morn} ~ ${hf.feels_like.night} °C</span>` +
