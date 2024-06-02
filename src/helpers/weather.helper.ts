@@ -82,7 +82,26 @@ async function getDailyWeather(lat: number, lon: number) {
 }
 
 async function getMatchingCities(cityName: string) {
-  const q = `q=${cityName}` + `&limit=5` + `&appid=${OW_API_KEY}`;
+  const q = `direct?q=${cityName}` + `&limit=5` + `&appid=${OW_API_KEY}`;
+
+  try {
+    const result = await fetch(OW_GEO_API + q);
+
+    const json = await result.json();
+
+    // console.log(json);
+
+    return json as City[];
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+async function getCitiesByLocation(latitude: number, longitude: number) {
+  const q =
+    `reverse?lat=${latitude}&lon=${longitude}` +
+    `&limit=5` +
+    `&appid=${OW_API_KEY}`;
 
   try {
     const result = await fetch(OW_GEO_API + q);
@@ -142,5 +161,6 @@ export {
   getHourlyWeather,
   getDailyWeather,
   getMatchingCities,
+  getCitiesByLocation,
   getMatchingEmoji,
 };

@@ -48,7 +48,8 @@ currentWeatherController.action("current", async (ctx) => {
     await ctx.deleteMessage();
 
     await ctx.reply(
-      `Here is your <b>current</b> weather:`.toUpperCase() +
+      `Here is the <b>current</b> weather of `.toUpperCase() +
+        `\n<b>${userSettings.city}</b> : ` +
         `\n\n${weatherText}`,
       {
         parse_mode: "HTML",
