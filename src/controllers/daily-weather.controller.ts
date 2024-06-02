@@ -72,7 +72,9 @@ dailyWeatherController.action(/daily-(\d+)/, async (ctx) => {
     await ctx.deleteMessage();
 
     await ctx.reply(
-      `Here is your <b>daily</b> weather:`.toUpperCase() + `\n\n${weatherText}`,
+      `Here is the <b>daily</b> weather of `.toUpperCase() +
+        `\n<b>${userSettings.city}</b> : ` +
+        `\n\n${weatherText}`,
       {
         parse_mode: "HTML",
       }

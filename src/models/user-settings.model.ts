@@ -4,6 +4,7 @@ interface UserSettings {
   chatId: number;
   userId: number;
   location: UserLocation;
+  city: string;
 }
 
 interface UserLocation {
@@ -32,6 +33,10 @@ const userSettingsSchema = new mongoose.Schema<UserSettings>({
     required: true,
   },
   location: { type: userLocationSchema, required: true },
+  city: {
+    type: String,
+    required: true,
+  },
 });
 
 const UserSettingsHelper = mongoose.model("UserSettings", userSettingsSchema);

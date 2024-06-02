@@ -2,7 +2,10 @@ import { Composer, Markup } from "telegraf";
 import { message } from "telegraf/filters";
 
 import { LOCATION_MENU, WEATHER_MENU } from "../models/weather-menu.model";
-import { getMatchingCities } from "../helpers/weather.helper";
+import {
+  getCitiesByLocation,
+  getMatchingCities,
+} from "../helpers/weather.helper";
 import * as userSettingsHelper from "../helpers/user-settings.helper";
 
 const locationController = new Composer();
@@ -33,12 +36,22 @@ locationController.on(message("location"), async (ctx) => {
 
   console.log(location);
 
+  const cities = await getCitiesByLocation(
+    location.latitude,
+    location.longitude
+  );
+  const city = cities![0];
+  const cityFull =
+    city.name + ", " + city.country + (city.state ? ", " + city.state : "");
+
   const chatId = ctx.chat.id;
   const userId = ctx.message.from.id;
+
   await userSettingsHelper.save({
     chatId: chatId,
     userId: userId,
     location: { latitude: location.latitude, longitude: location.longitude },
+    city: cityFull,
   });
 
   await ctx.reply(`Coordinates received!`, Markup.removeKeyboard());
@@ -66,16 +79,22 @@ locationController.on(message("text"), async (ctx) => {
       ctx.reply(
         "Please, make a choice between the list of matching cities : ",
         Markup.inlineKeyboard(
-          matchingCities.map((city) => [
-            {
-              text:
-                city.name +
-                ", " +
-                city.country +
-                (city.state ? ", " + city.state : ""),
-              callback_data: "location=" + String(city.lat + ", " + city.lon),
-            },
-          ])
+          matchingCities.map((city) => {
+            const cityFull =
+              city.name +
+              ", " +
+              city.country +
+              (city.state ? ", " + city.state : "");
+
+            return [
+              {
+                text: cityFull,
+                callback_data:
+                  "location=" +
+                  String(city.lat + "_" + city.lon + "_" + cityFull),
+              },
+            ];
+          })
         )
       );
     } else {
@@ -86,9 +105,10 @@ locationController.on(message("text"), async (ctx) => {
 
 locationController.action(/location=(.+)/, async (ctx) => {
   const location = ctx.match[1];
-  const locationSplit = location.split(", ");
+  const locationSplit = location.split("_");
   const lat = Number(locationSplit[0]);
   const lon = Number(locationSplit[1]);
+  const cityFull = String(locationSplit[2]);
 
   console.log(location);
 
@@ -98,6 +118,7 @@ locationController.action(/location=(.+)/, async (ctx) => {
     chatId: -1,
     userId: userId,
     location: { latitude: lat, longitude: lon },
+    city: cityFull,
   });
 
   await ctx.answerCbQuery();

@@ -89,14 +89,17 @@ hourlyWeatherController.action(/hourly-(\d+)/, async (ctx) => {
 
     if (weatherTextArray.length <= 24) {
       await ctx.reply(
-        `Here is your <b>hourly</b> weather : \n\n${weatherText}`,
+        `Here is the <b>hourly</b> weather of `.toUpperCase() +
+          `\n<b>${userSettings.city}</b> : ` +
+          ` \n\n${weatherText}`,
         {
           parse_mode: "HTML",
         }
       );
     } else {
       await ctx.reply(
-        `Here is your <b>hourly</b> weather (PART 1):`.toUpperCase() +
+        `Here is your <b>hourly</b> weather of `.toUpperCase() +
+          `\n<b>${userSettings.city}</b> (PART 1) : ` +
           `\n\n${weatherTextPart1}`,
         {
           parse_mode: "HTML",
@@ -104,7 +107,8 @@ hourlyWeatherController.action(/hourly-(\d+)/, async (ctx) => {
       );
 
       await ctx.reply(
-        `Here is your <b>hourly</b> weather (PART 2):`.toUpperCase() +
+        `Here is your <b>hourly</b> weather of `.toUpperCase() +
+          `\n<b>${userSettings.city}</b> (PART 2) : ` +
           `\n\n${weatherTextPart2}`,
         {
           parse_mode: "HTML",
