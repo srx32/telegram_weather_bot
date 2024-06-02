@@ -2,7 +2,6 @@ import "dotenv/config";
 
 import { Markup, Telegraf } from "telegraf";
 import { message } from "telegraf/filters";
-import { USER_SETTINGS } from "./models/user-settings.model";
 import { DateTime } from "luxon";
 import currentWeatherController from "./controllers/current-weather.controller";
 import hourlyWeatherController from "./controllers/hourly-weather.controller";

@@ -1,6 +1,7 @@
 import { Composer, Markup } from "telegraf";
+
 import { LOCATION_MENU, WEATHER_MENU } from "../models/weather-menu.model";
-import { USER_SETTINGS } from "../models/user-settings.model";
+import * as userSettingsHelper from "../helpers/user-settings.helper";
 
 const commandController = new Composer();
 
@@ -46,9 +47,8 @@ commandController.command("setup", async (ctx) => {
 });
 
 commandController.command("weather", async (ctx) => {
-  const userSettings = USER_SETTINGS.find(
-    (userSettings) => userSettings.userId === ctx.message.from.id
-  );
+  const userId = ctx.message.from.id;
+  const userSettings = await userSettingsHelper.get(userId);
 
   if (!userSettings) {
     ctx.reply(
