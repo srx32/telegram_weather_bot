@@ -1,8 +1,9 @@
 import { Composer, Markup } from "telegraf";
-import { USER_SETTINGS } from "../models/user-settings.model";
-import { LOCATION_MENU, WEATHER_MENU } from "../models/weather-menu.model";
 import { message } from "telegraf/filters";
+
+import { LOCATION_MENU, WEATHER_MENU } from "../models/weather-menu.model";
 import { getMatchingCities } from "../helpers/weather.helper";
+import * as userSettingsHelper from "../helpers/user-settings.helper";
 
 const locationController = new Composer();
 
@@ -32,9 +33,11 @@ locationController.on(message("location"), async (ctx) => {
 
   console.log(location);
 
-  USER_SETTINGS.push({
-    chatId: ctx.chat.id,
-    userId: ctx.message.from.id,
+  const chatId = ctx.chat.id;
+  const userId = ctx.message.from.id;
+  await userSettingsHelper.save({
+    chatId: chatId,
+    userId: userId,
     location: { latitude: location.latitude, longitude: location.longitude },
   });
 
@@ -89,9 +92,11 @@ locationController.action(/location=(.+)/, async (ctx) => {
 
   console.log(location);
 
-  USER_SETTINGS.push({
+  // const chatId = ctx.chat.id;
+  const userId = ctx.callbackQuery.from.id;
+  await userSettingsHelper.save({
     chatId: -1,
-    userId: ctx.callbackQuery.from.id,
+    userId: userId,
     location: { latitude: lat, longitude: lon },
   });
 
