@@ -9,6 +9,7 @@ import dailyWeatherController from "./controllers/daily-weather.controller";
 import { WEATHER_MENU } from "./models/weather-menu.model";
 import commandController from "./controllers/command.controller";
 import locationController from "./controllers/location.controller";
+import settingsController from "./controllers/settings.controller";
 
 const bot = new Telegraf(process.env.BOT_TOKEN!);
 
@@ -26,6 +27,7 @@ bot.action("weather_menu", async (ctx) => {
 
 // Order is important. Commands controller/middleware should come before messages (text) controller/middleware
 bot.use(commandController);
+bot.use(settingsController);
 bot.use(locationController);
 bot.use(currentWeatherController);
 bot.use(hourlyWeatherController);

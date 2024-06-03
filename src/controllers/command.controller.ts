@@ -52,7 +52,7 @@ commandController.command("settings", async (ctx) => {
 
   if (!userSettings) {
     ctx.reply(
-      `You haven't set your settings, yet. Do you want to set them, now ?`,
+      `You haven't set your settings. Do you want to set them, now ?`,
       Markup.inlineKeyboard([
         [
           {
@@ -66,6 +66,7 @@ commandController.command("settings", async (ctx) => {
         ],
       ])
     );
+
     return;
   }
 
@@ -85,12 +86,12 @@ commandController.command("settings", async (ctx) => {
       reply_markup: Markup.inlineKeyboard([
         [
           {
-            text: "✏️ Modify",
-            callback_data: "modify_setting",
+            text: "✏️ Edit",
+            callback_data: "edit_settings",
           },
           {
             text: "⛔ Clear",
-            callback_data: "clear_setting",
+            callback_data: "clear_settings",
           },
         ],
       ]).reply_markup,
