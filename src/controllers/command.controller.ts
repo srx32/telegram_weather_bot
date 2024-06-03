@@ -38,10 +38,6 @@ commandController.help(async (ctx) => {
 
 commandController.command("setup", async (ctx) => {
   await replyWithLocationMenu(ctx);
-
-  // Markup.keyboard([
-  //   Markup.button.locationRequest("Tap here to send your location 🌍 📌"),
-  // ]).oneTime(true)
 });
 
 commandController.command("settings", async (ctx) => {
@@ -102,12 +98,8 @@ commandController.command("weather", async (ctx) => {
   const userSettings = await userSettingsHelper.get(userId);
 
   if (!userSettings) {
-    ctx.reply(
-      `Please resend your location`,
-      Markup.keyboard([
-        Markup.button.locationRequest("Tap here to send your location 🌍 📌"),
-      ]).oneTime(true)
-    );
+    await replyWithLocationMenu(ctx);
+
     return;
   }
 

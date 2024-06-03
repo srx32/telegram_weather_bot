@@ -5,6 +5,7 @@ import { getCurrentWeather, getMatchingEmoji } from "../helpers/weather.helper";
 import { WEATHER_MENU } from "../models/weather-menu.model";
 
 import * as userSettingsHelper from "../helpers/user-settings.helper";
+import { replyWithLocationMenu } from "../helpers/location.helper";
 
 const currentWeatherController = new Composer();
 
@@ -14,12 +15,8 @@ currentWeatherController.action("current", async (ctx) => {
     const userSettings = await userSettingsHelper.get(userId);
 
     if (!userSettings) {
-      ctx.reply(
-        `Please resend your location`,
-        Markup.keyboard([
-          Markup.button.locationRequest("Tap here to send your location 🌍 📌"),
-        ]).oneTime(true)
-      );
+      await replyWithLocationMenu(ctx);
+
       return;
     }
 
