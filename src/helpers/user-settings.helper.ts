@@ -1,4 +1,7 @@
-import { UserSettingsHelper, UserSettings } from "../models/user-settings.model";
+import {
+  UserSettingsHelper,
+  UserSettings,
+} from "../models/user-settings.model";
 
 async function get(userId: number) {
   try {
@@ -16,11 +19,29 @@ async function get(userId: number) {
   }
 }
 
-async function save(userData: UserSettings) {
+// async function save(userData: UserSettings) {
+//   try {
+//     await UserSettingsHelper.create(userData);
+//   } catch (error) {
+//     console.log("Error while saving user settings : " + error);
+
+//     throw error;
+//   }
+// }
+
+async function saveOrUpdate(userId: number, userData: UserSettings) {
   try {
-    await UserSettingsHelper.create(userData);
+    const updated = await UserSettingsHelper.updateOne(
+      { userId: userId },
+      userData,
+      {
+        upsert: true,
+      }
+    );
+
+    return updated.modifiedCount === 1 || updated.upsertedCount === 1;
   } catch (error) {
-    console.log("Error while saving user settings : " + error);
+    console.log("Error while saving or updating user settings : " + error);
 
     throw error;
   }
@@ -38,4 +59,4 @@ async function clear(userId: number) {
   }
 }
 
-export { get, save, clear };
+export { get, saveOrUpdate, clear };

@@ -1,7 +1,7 @@
 import { Composer, Markup } from "telegraf";
 import { message } from "telegraf/filters";
 
-import { LOCATION_MENU, WEATHER_MENU } from "../models/weather-menu.model";
+import { WEATHER_MENU } from "../models/weather-menu.model";
 import {
   getCitiesByLocation,
   getMatchingCities,
@@ -47,12 +47,18 @@ locationController.on(message("location"), async (ctx) => {
   const chatId = ctx.chat.id;
   const userId = ctx.message.from.id;
 
-  await userSettingsHelper.save({
+  const saved = await userSettingsHelper.saveOrUpdate(userId, {
     chatId: chatId,
     userId: userId,
     location: { latitude: location.latitude, longitude: location.longitude },
     city: cityFull,
   });
+
+  if (!saved) {
+    ctx.answerCbQuery("Error : Couldn't save coordinates");
+
+    return;
+  }
 
   await ctx.reply(`Coordinates received!`, Markup.removeKeyboard());
 
@@ -114,12 +120,18 @@ locationController.action(/location=(.+)/, async (ctx) => {
 
   // const chatId = ctx.chat.id;
   const userId = ctx.callbackQuery.from.id;
-  await userSettingsHelper.save({
+  const saved = await userSettingsHelper.saveOrUpdate(userId, {
     chatId: -1,
     userId: userId,
     location: { latitude: lat, longitude: lon },
     city: cityFull,
   });
+
+  if (!saved) {
+    ctx.answerCbQuery("Error : Couldn't save coordinates");
+
+    return;
+  }
 
   await ctx.answerCbQuery();
 

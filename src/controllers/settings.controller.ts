@@ -1,11 +1,21 @@
 import { Composer, Markup } from "telegraf";
-import { DateTime } from "luxon";
 
-import { getHourlyWeather, getMatchingEmoji } from "../helpers/weather.helper";
-import { HOURLY_MENU, WEATHER_MENU } from "../models/weather-menu.model";
 import * as userSettingsHelper from "../helpers/user-settings.helper";
+import { replyWithLocationMenu } from "../helpers/location.helper";
 
 const settingsController = new Composer();
+
+settingsController.action("edit_settings", async (ctx) => {
+  try {
+    await ctx.answerCbQuery();
+
+    await ctx.deleteMessage();
+
+    await await replyWithLocationMenu(ctx);
+  } catch (error) {
+    console.error(error);
+  }
+});
 
 settingsController.action("clear_settings", async (ctx) => {
   //   await ctx.editMessageReplyMarkup(

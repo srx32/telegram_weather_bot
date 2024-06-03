@@ -1,18 +1,3 @@
-const LOCATION_MENU = [
-  [
-    {
-      text: "🏙️ City",
-      callback_data: "city",
-    },
-  ],
-  [
-    {
-      text: "📌 Location",
-      callback_data: "location",
-    },
-  ],
-];
-
 const WEATHER_MENU = [
   [
     {
@@ -96,4 +81,4 @@ const DAILY_MENU = [
   ],
 ];
 
-export { LOCATION_MENU, WEATHER_MENU, HOURLY_MENU, DAILY_MENU };
+export { WEATHER_MENU, HOURLY_MENU, DAILY_MENU };
