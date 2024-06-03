@@ -46,6 +46,59 @@ commandController.command("setup", async (ctx) => {
   // ]).oneTime(true)
 });
 
+commandController.command("settings", async (ctx) => {
+  const userId = ctx.message.from.id;
+  const userSettings = await userSettingsHelper.get(userId);
+
+  if (!userSettings) {
+    ctx.reply(
+      `You haven't set your settings. Do you want to set them, now ?`,
+      Markup.inlineKeyboard([
+        [
+          {
+            text: "✅ Yes",
+            callback_data: "yes_settings",
+          },
+          {
+            text: "❌ No",
+            callback_data: "no_settings",
+          },
+        ],
+      ])
+    );
+
+    return;
+  }
+
+  await ctx.reply(
+    "Here are your settings : " +
+      "\n\nCity : " +
+      "<b>" +
+      userSettings.city +
+      "</b>" +
+      "\nLocation : (lat=" +
+      userSettings.location.latitude +
+      ", lon=" +
+      userSettings.location.longitude +
+      ")",
+    {
+      parse_mode: "HTML",
+      reply_markup: Markup.inlineKeyboard([
+        [
+          {
+            text: "✏️ Edit",
+            callback_data: "edit_settings",
+          },
+          {
+            text: "⛔ Clear",
+            callback_data: "clear_settings",
+          },
+        ],
+      ]).reply_markup,
+    }
+  );
+});
+
 commandController.command("weather", async (ctx) => {
   const userId = ctx.message.from.id;
   const userSettings = await userSettingsHelper.get(userId);
