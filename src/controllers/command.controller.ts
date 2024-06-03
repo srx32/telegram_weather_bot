@@ -1,7 +1,8 @@
 import { Composer, Markup } from "telegraf";
 
-import { LOCATION_MENU, WEATHER_MENU } from "../models/weather-menu.model";
+import { WEATHER_MENU } from "../models/weather-menu.model";
 import * as userSettingsHelper from "../helpers/user-settings.helper";
+import { replyWithLocationMenu } from "../helpers/location.helper";
 
 const commandController = new Composer();
 
@@ -36,10 +37,7 @@ commandController.help(async (ctx) => {
 });
 
 commandController.command("setup", async (ctx) => {
-  await ctx.reply(
-    "First, we need your location.\nYou can send your location or send the city name :",
-    Markup.inlineKeyboard(LOCATION_MENU)
-  );
+  await replyWithLocationMenu(ctx);
 
   // Markup.keyboard([
   //   Markup.button.locationRequest("Tap here to send your location 🌍 📌"),
