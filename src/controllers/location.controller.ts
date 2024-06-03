@@ -133,6 +133,9 @@ locationController.action(/location=(.+)/, async (ctx) => {
     return;
   }
 
+  // Delete matching cities list - Normally
+  ctx.deleteMessage();
+
   await ctx.answerCbQuery();
 
   await ctx.reply(
