@@ -7,32 +7,45 @@ import { replyWithLocationMenu } from "../helpers/location.helper";
 const commandController = new Composer();
 
 commandController.start(async (ctx) => {
+  await ctx.telegram.setMyCommands([
+    { command: "start", description: "start the bot" },
+    { command: "help", description: "display manual and all bot commands" },
+    { command: "setup", description: "set up location for weather forecast" },
+    { command: "settings", description: "display bot's settings for you" },
+    { command: "weather", description: "get a weather forecast" },
+  ]);
+
   await ctx.telegram.sendMessage(
     ctx.message.chat.id,
-    `Hello ${ctx.message.from.first_name}
-      
-  Thanks for using my 🐉 weather bot
-  
-  Press or enter /help to get the list of commands.
-  `
+    `
+    Hello ${ctx.message.from.first_name}
+    \nThanks for using my 🐉 weather bot
+    \nPress or enter /help to get the list of commands.
+    `
   );
 });
 
 commandController.help(async (ctx) => {
+  const commands = await ctx.telegram.getMyCommands();
+
+  const commandsText = commands
+    .map((value) => {
+      return "/" + value.command + " - " + value.description;
+    })
+    .join("\n");
+
   await ctx.telegram.sendMessage(
     ctx.message.chat.id,
-    `To get you started :
-  
-  1 - First, we'll need your location (GPS or city-country you live in).
-  
-  2 - Second, you'll select the type of weather forecast you want.
-  
-  3 - And finally, we'll display the data to you.
-  
-  Sounds good ? Then, let's go!
-  
-  Smash or enter /setup to start.
     `
+    <b>To get you started :</b>
+    \n1 - First, we'll need your location (GPS or city-country you live in).
+    \n2 - Second, you'll select the type of weather forecast you want.
+    \n3 - And finally, we'll display the data to you.
+    \nSounds good ? Then, let's go! Type or tap /setup to start.
+    \n<b>Also, here is a list of all commands :</b>
+    \n${commandsText}
+    `,
+    { parse_mode: "HTML" }
   );
 });
 
